@@ -21,7 +21,13 @@ class PastesController < ApplicationController
 
   # POST /pastes or /pastes.json
   def create
-    @paste = Paste.new(paste_params)
+    @paste = Paste.new(paste_params.except(:content))
+    file_io = StringIO.new(paste_params[:content])
+    @paste.content_file.attach(
+      io: file_io,
+      filename: "#{@paste.slug}.txt",
+      content_type: "text/plain"
+    )
 
     respond_to do |format|
       if @paste.save
@@ -65,6 +71,6 @@ class PastesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def paste_params
-      params.expect(paste: [ :title, :slug, :private ])
+      params.expect(paste: [ :title, :slug, :private, :content ])
     end
 end

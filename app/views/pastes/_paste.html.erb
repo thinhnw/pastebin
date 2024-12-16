@@ -1,17 +1,21 @@
 <div id="<%= dom_id paste %>">
   <p class="my-5">
-    <strong class="block font-medium mb-1">Title:</strong>
+    <strong class="block mb-1 font-medium">Title:</strong>
     <%= paste.title %>
   </p>
-
   <p class="my-5">
-    <strong class="block font-medium mb-1">Slug:</strong>
+    <strong class="block mb-1 font-medium">Slug:</strong>
     <%= paste.slug %>
   </p>
-
+  <div class="my-5">
+    <strong class="block mb-1 font-medium">Content:</strong>
+    <div class="p-4 overflow-auto bg-gray-800 rounded-lg">
+      <%# Read and display the file content %>
+      <pre class="text-white"><code><%= @paste.content_file.download %></code></pre>
+    </div>
+  </div>
   <p class="my-5">
-    <strong class="block font-medium mb-1">Private:</strong>
+    <strong class="block mb-1 font-medium">Private:</strong>
     <%= paste.private %>
   </p>
-
 </div>
