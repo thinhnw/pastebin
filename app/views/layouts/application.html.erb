@@ -17,10 +17,21 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <%= javascript_importmap_tags %>
   </head>
   <body>
-    <main class="container flex px-5 mx-auto mt-28">
+    <nav class="flex items-center py-3 text-white bg-gray-800">
+      <div class="container flex px-5 mx-auto">
+        <div class="w-full mx-auto md:w-2/3">
+          <%= link_to root_path, class: "flex items-center space-x-2 text-white hover:text-gray-300" do %>
+            <i class="fa-solid fa-circle-plus"></i>
+            <span class="text-xl font-semibold">Pastebin</span>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+    <main class="container flex px-5 mx-auto mt-16">
       <%= yield %>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
