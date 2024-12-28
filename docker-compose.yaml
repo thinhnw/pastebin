@@ -1,0 +1,24 @@
+services:
+  app:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pastebin.rule=Host(`pastebin.thinhnw.site`)"  # Replace with your domain
+      - "traefik.http.routers.pastebin.entrypoints=websecure"
+      - "traefik.http.routers.pastebin.tls=true"
+      - "traefik.http.routers.pastebin.tls.certresolver=myresolver"
+      - "traefik.http.services.pastebin.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik_traefik"
+    networks:
+      - traefik_traefik
+      - pastebin
+    # command: bash -c "rm -f tmp/pids/server.pid && bin/dev" #bundle exec rails s -b '0.0.0.0' -p 3000"
+
+networks:
+  traefik_traefik:
+    external: true
+  pastebin:
+    driver: bridge
