@@ -6,6 +6,6 @@ class Paste < ApplicationRecord
   private
 
   def generate_slug
-    self.slug ||= SecureRandom.hex(6) # Generates a unique identifier for the paste
+    self.slug ||= SecureRandom.urlsafe_base64(3) # Generates a unique identifier for the paste
   end
 end

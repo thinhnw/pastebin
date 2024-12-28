@@ -10,6 +10,12 @@ class PastesController < ApplicationController
   def show
   end
 
+  def show_by_slug
+    @paste = Paste.where(slug: params[:slug]).first
+    redirect_to new_paste_path and return if @paste.nil?
+    render :show
+  end
+
   # GET /pastes/new
   def new
     @paste = Paste.new
@@ -31,7 +37,7 @@ class PastesController < ApplicationController
 
     respond_to do |format|
       if @paste.save
-        format.html { redirect_to @paste, notice: "Paste was successfully created." }
+        format.html { redirect_to paste_slug_path(slug: @paste.slug), notice: "Paste was successfully created." }
         format.json { render :show, status: :created, location: @paste }
       else
         format.html { render :new, status: :unprocessable_entity }
