@@ -16,6 +16,11 @@ class PastesController < ApplicationController
     render :show
   end
 
+  def raw
+    @paste = Paste.find_by!(slug: params[:slug])
+    render plain: @paste.content_file.download
+  end
+
   # GET /pastes/new
   def new
     @paste = Paste.new

@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :pastes, only: [ :new, :create, :destroy ]
   get "p/:slug" => "pastes#show_by_slug", as: :paste_slug
+  get "p/:slug/raw", to: "pastes#raw", as: :raw_paste
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
