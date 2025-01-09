@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :pastes, only: [ :new, :create, :destroy ]
   get "p/:slug" => "pastes#show_by_slug", as: :paste_slug
   get "p/:slug/raw", to: "pastes#raw", as: :raw_paste
