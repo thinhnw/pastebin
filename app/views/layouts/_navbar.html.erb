@@ -1,0 +1,24 @@
+<nav class="flex items-center py-3 text-white bg-gray-800">
+  <div class="container flex items-center justify-between px-5 mx-auto">
+    <div class="flex justify-between w-full mx-auto md:w-2/3">
+      <!-- Logo Section -->
+      <div>
+        <%= link_to root_path, class: "flex items-center space-x-2 text-white hover:text-gray-300" do %>
+          <i class="fa-solid fa-circle-plus"></i>
+          <span class="text-xl font-semibold">Pastebin</span>
+        <% end %>
+      </div>
+      <!-- User Section -->
+      <div class="flex items-center space-x-4">
+        <% if user_signed_in? %>
+          <span class="text-sm font-medium text-gray-300">
+            <%= current_user.email %>
+          </span>
+          <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 text-sm font-medium bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" %>
+        <% else %>
+          <%= link_to "Sign In", new_user_session_path, class: "px-3 py-1 text-sm font-medium text-gray-300 border border-gray-600 rounded hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>
