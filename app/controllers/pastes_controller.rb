@@ -68,8 +68,9 @@ class PastesController < ApplicationController
 
     def authorize_paste
       paste = Paste.find_by(slug: params[:slug])
-      if paste.private? && (!user_signed_in?)
+      if paste.nil? || (paste.private? && (!user_signed_in? || paste.user_id != current_user.id))
         redirect_to root_path
+        return
       end
     end
 end
