@@ -1,5 +1,4 @@
 class PastesController < ApplicationController
-  before_action :set_paste, only: %i[ destroy ]
   before_action :authorize_paste, only: %i[ show_by_slug raw destroy ]
 
   # GET /pastes or /pastes.json
@@ -25,7 +24,12 @@ class PastesController < ApplicationController
 
   # POST /pastes or /pastes.json
   def create
-    @paste = Paste.new(paste_params.except(:content))
+    if user_signed_in?
+      @paste = current_user.pastes.build(paste_params.except(:content))
+    else
+      @paste = Paste.new(paste_params.except(:content))
+    end
+
     file_io = StringIO.new(paste_params[:content])
     @paste.content_file.attach(
       io: file_io,
@@ -56,11 +60,6 @@ class PastesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_paste
-      @paste = Paste.find(params.expect(:id))
-    end
-
     # Only allow a list of trusted parameters through.
     def paste_params
       params.expect(paste: [ :title, :slug, :private, :content, :language ])

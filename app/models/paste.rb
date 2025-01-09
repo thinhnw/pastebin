@@ -3,6 +3,8 @@ class Paste < ApplicationRecord
 
   has_one_attached :content_file
 
+  belongs_to :user, optional: true
+
   private
 
   def generate_slug
