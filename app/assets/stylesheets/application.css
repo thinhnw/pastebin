@@ -8,3 +8,10 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+.hljs-ln td.hljs-ln-numbers {
+  padding-right: 10px;  /* Adjust this value to control the space */
+  border-right: 1px solid #ccc; 
+}
+.hljs-ln td.hljs-ln-code {
+  padding-left: 10px;         /* Space to ensure code doesn’t touch the separator */
+}

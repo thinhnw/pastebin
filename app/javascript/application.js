@@ -6,4 +6,5 @@ document.addEventListener("turbo:load", () => {
   document.querySelectorAll("pre code").forEach((block) => {
     hljs.highlightElement(block);
   });
+  hljs.initLineNumbersOnLoad();
 })
