@@ -15,3 +15,10 @@
 .hljs-ln td.hljs-ln-code {
   padding-left: 10px;         /* Space to ensure code doesn’t touch the separator */
 }
+
+.empty-state {
+  display: none;
+}
+.empty-state:only-child {
+  display: revert;
+}
