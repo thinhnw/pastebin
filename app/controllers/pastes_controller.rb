@@ -5,7 +5,7 @@ class PastesController < ApplicationController
 
   # GET /pastes or /pastes.json
   def index
-    @pastes = Paste.all
+    @pastes = current_user.pastes.all
   end
 
   def show
@@ -84,13 +84,16 @@ class PastesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to pastes_path, status: :see_other, notice: "Paste was successfully destroyed." }
-      format.json { head :no_content }
+      format.turbo_stream { flash.now[:notice] = "Paste was successfully destroyed." }
     end
   end
 
   private
     def set_paste
-      @paste = Paste.find_by!(slug: params[:slug])
+      @paste = Paste.find_by(slug: params[:slug])
+      if @paste.nil?
+        redirect_to root_path
+      end
     end
     # Only allow a list of trusted parameters through.
     def paste_params
@@ -98,10 +101,8 @@ class PastesController < ApplicationController
     end
 
     def authorize_paste
-      paste = Paste.find_by(slug: params[:slug])
-      if paste.nil? || (paste.private? && (!user_signed_in? || paste.user_id != current_user.id))
+      if @paste.private? && (!user_signed_in? || @paste.user_id != current_user.id)
         redirect_to root_path
-        nil
       end
     end
 end
