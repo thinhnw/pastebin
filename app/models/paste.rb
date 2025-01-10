@@ -1,9 +1,15 @@
 class Paste < ApplicationRecord
-  before_create :generate_slug
+  before_validation :generate_slug, on: :create
 
   has_one_attached :content_file
 
   belongs_to :user, optional: true
+
+  validates :slug, presence: true, uniqueness: true
+
+  def to_param
+    slug
+  end
 
   private
 
