@@ -16,6 +16,9 @@
     </div>
     <% if user_signed_in? && current_user.id == @paste.user_id %>
       <div class="inline-block">
+        <%= link_to "Edit", edit_paste_path(@paste), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium inline-flex justify-center items-center text-center" %>
+      </div>
+      <div class="inline-block">
         <%= button_to "Destroy this paste", @paste, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
       </div>
     <% end %>

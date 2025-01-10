@@ -1,19 +1,20 @@
 class PastesController < ApplicationController
-  before_action :authorize_paste, only: %i[ show_by_slug raw destroy ]
+  before_action :set_paste, only: %i[ show raw edit update destroy ]
+  before_action :authorize_paste, only: %i[ show raw edit update destroy ]
+  before_action :authenticate_user!, only: %i[ index  ]
 
   # GET /pastes or /pastes.json
   def index
     @pastes = Paste.all
   end
 
-  def show_by_slug
+  def show
     @paste = Paste.where(slug: params[:slug]).first
     redirect_to new_paste_path and return if @paste.nil?
     render :show
   end
 
   def raw
-    @paste = Paste.find_by!(slug: params[:slug])
     render plain: @paste.content_file.download
   end
 
@@ -39,12 +40,40 @@ class PastesController < ApplicationController
 
     respond_to do |format|
       if @paste.save
-        format.html { redirect_to paste_slug_path(slug: @paste.slug), notice: "Paste was successfully created." }
+        format.html { redirect_to @paste, notice: "Paste was successfully created." }
         format.json { render :show, status: :created, location: @paste }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @paste.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    ActiveRecord::Base.transaction do
+      begin
+        file_io = StringIO.new(paste_params[:content])
+        @paste.content_file.attach(
+          io: file_io,
+          filename: "#{@paste.slug}.txt",
+          content_type: "text/plain"
+        )
+      rescue => e
+        Rails.logger.error "File attachment failed: #{e.message}"
+        raise ActiveRecord::Rollback
+      end
+
+      unless @paste.update(paste_params.except(:content))
+        raise ActiveRecord::Rollback
+      end
+    end
+    if @paste.persisted?
+      redirect_to @paste, notice: "Paste was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -60,6 +89,9 @@ class PastesController < ApplicationController
   end
 
   private
+    def set_paste
+      @paste = Paste.find_by!(slug: params[:slug])
+    end
     # Only allow a list of trusted parameters through.
     def paste_params
       params.expect(paste: [ :title, :slug, :private, :content, :language ])
@@ -69,7 +101,7 @@ class PastesController < ApplicationController
       paste = Paste.find_by(slug: params[:slug])
       if paste.nil? || (paste.private? && (!user_signed_in? || paste.user_id != current_user.id))
         redirect_to root_path
-        return
+        nil
       end
     end
 end
