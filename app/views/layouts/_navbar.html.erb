@@ -9,12 +9,27 @@
         <% end %>
       </div>
       <!-- User Section -->
-      <div class="flex items-center space-x-4">
+      <div class="relative flex items-center space-x-4" data-controller="dropdown">
         <% if user_signed_in? %>
-          <span class="text-sm font-medium text-gray-300">
-            <%= current_user.email %>
-          </span>
-          <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 text-sm font-medium bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" %>
+          <button 
+            data-action="dropdown#toggle"
+            class="flex items-center px-3 py-2 space-x-2 text-sm font-medium bg-gray-700 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            <span class="text-sm font-medium text-gray-300">
+              <%= current_user.email %>
+            </span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div
+            data-dropdown-target="menu"                                       
+            class="absolute right-0 z-10 hidden bg-gray-700 rounded shadow-lg w-fit-content top-12"
+          >
+            <div class="px-1">
+              <%= link_to "New Pastes", new_paste_path, class: "px-3 py-2 text-sm font-medium text-gray-300" %>
+              <%= link_to "My Pastes", pastes_path, class: "px-3 py-2 text-sm font-medium text-gray-300" %>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-3 py-2 text-sm font-medium text-red-500" %>
+            </div>
+          </div>
         <% else %>
           <%= link_to "Sign in", new_user_session_path, class: "px-3 py-1 text-sm font-medium text-gray-300 border border-gray-600 rounded hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" %>
         <% end %>
