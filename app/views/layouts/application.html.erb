@@ -23,7 +23,10 @@
   </head>
   <body>
     <%= render "layouts/navbar" %>
-    <main class="container flex px-5 mx-auto mt-16">
+    <main class="container flex flex-col px-5 mx-auto mt-16">
+      <div class="block">
+        <%= turbo_frame_tag "flash" %>
+      </div>
       <%= yield %>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
