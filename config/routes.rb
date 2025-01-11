@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     end
     member do
       get "raw"
+      get "edit_title"
+      patch "update_title"
     end
   end
   # get "p/:slug" => "pastes#show_by_slug", as: :paste_slug

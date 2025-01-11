@@ -1,6 +1,6 @@
 class PastesController < ApplicationController
-  before_action :set_paste, only: %i[ show raw edit update destroy ]
-  before_action :authorize_paste, only: %i[ show raw edit update destroy ]
+  before_action :set_paste, only: %i[ show raw edit update edit_title update_title destroy ]
+  before_action :authorize_paste, only: %i[ show raw edit update edit_title update_title destroy ]
   before_action :authenticate_user!, only: %i[ index  ]
 
   # GET /pastes or /pastes.json
@@ -48,6 +48,23 @@ class PastesController < ApplicationController
       else
         render :new, status: :unprocessable_entity
         raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+  def edit_title
+  end
+
+  def update_title
+    if @paste.update(title: paste_params[:title])
+      respond_to do |format|
+        format.turbo_stream
+      end
+    else
+      flash.now[:error] = "Title " + @paste.errors[:title].first
+      @paste.reload
+      respond_to do |format|
+        format.turbo_stream
       end
     end
   end

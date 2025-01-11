@@ -10,15 +10,22 @@
   <%= turbo_frame_tag "pastes" do %>
     <% @pastes.each do |paste| %>
       <%= turbo_frame_tag paste do %>
-        <div class="flex items-center justify-between p-4 mb-2 bg-white rounded-md shadow">
+        <div class="flex items-center justify-between p-4 mb-2 bg-white rounded-md shadow"
+          data-controller="copy"
+        >
           <!-- Title -->
-          <div>
-            <%= link_to paste.title, paste_path(paste), 
-                data: { turbo: false },
-                class: "text-lg font-medium text-gray-900 hover:underline" %>
+          <div class="flex">
+            <%= render "pastes/title", paste: paste %>
           </div>
-          <!-- Delete Button -->
-          <div>
+          <div class="flex">
+            <!-- Copy Link Button -->
+            <div>
+              <p class="hidden" data-copy-target="source"><%= request.base_url + paste_path(paste) %></p>
+              <button data-action="click->copy#copy" class="mr-2 text-gray-500 hover:text-gray-600 focus:outline-none">
+                <i class="fas fa-link"></i>
+              </button>
+            </div>
+            <!-- Delete Button -->
             <%= button_to paste_path(paste), method: :delete, data: { confirm: "Are you sure you want to delete this paste?" }, class: "text-gray-500 hover:text-gray-600 focus:outline-none" do %>
               <i class="fas fa-trash-alt"></i>
             <% end %>

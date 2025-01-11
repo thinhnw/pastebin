@@ -1,0 +1,4 @@
+<%= turbo_stream.replace "paste_title_#{@paste.id}" do %>
+  <%= render "pastes/title", paste: @paste %>
+<% end %>
+<%= render_turbo_stream_flash_messages %>

@@ -1,5 +1,9 @@
 <% flash.each do |flash_type, message| %>
-  <p class="inline-block px-3 py-2 mb-5 font-medium text-green-500 rounded-lg bg-green-50">
+  <p class="inline-block px-3 py-2 mb-5 font-medium rounded-lg 
+    <% if flash_type == "notice" %>text-green-500 bg-green-50<% end %>
+    <% if flash_type == "alert" %>text-yellow-500 bg-yellow-50<% end %>
+    <% if flash_type == "error" %>text-red-500 bg-red-50<% end %>
+    <% if flash_type == "success" %>text-blue-500 bg-blue-50<% end %>">
     <%= message %>
   </p>
 <% end %>

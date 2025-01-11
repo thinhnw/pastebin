@@ -21,13 +21,13 @@
             <i class="fa-solid fa-chevron-down"></i>
           </button>
           <div
-            data-dropdown-target="menu"                                       
-            class="absolute right-0 z-10 hidden bg-gray-700 rounded shadow-lg w-fit-content top-12"
+            data-dropdown-target="menu"
+            class="absolute right-0 z-10 hidden w-48 bg-gray-800 rounded-lg shadow-lg top-12"
           >
-            <div class="px-1">
-              <%= link_to "New Pastes", new_paste_path, class: "px-3 py-2 text-sm font-medium text-gray-300" %>
-              <%= link_to "My Pastes", pastes_path, class: "px-3 py-2 text-sm font-medium text-gray-300" %>
-              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-3 py-2 text-sm font-medium text-red-500" %>
+            <div class="py-2">
+              <%= link_to "New Pastes", new_paste_path, class: "block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 rounded-md transition-all duration-200" %>
+              <%= link_to "My Pastes", pastes_path, class: "block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 rounded-md transition-all duration-200" %>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-600 rounded-md transition-all duration-200" %>
             </div>
           </div>
         <% else %>
