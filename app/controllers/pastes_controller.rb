@@ -37,19 +37,17 @@ class PastesController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      @paste.save
-
       file_io = StringIO.new(paste_params[:content])
       @paste.content_file.attach(
         io: file_io,
         filename: "#{@paste.slug}.txt",
         content_type: "text/plain"
       )
-      if @paste.errors.any?
+      if @paste.save
+        redirect_to @paste, notice: "Paste was successfully created."
+      else
         render :new, status: :unprocessable_entity
         raise ActiveRecord::Rollback
-      else
-        redirect_to @paste, notice: "Paste was successfully created."
       end
     end
   end

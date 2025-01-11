@@ -2,3 +2,10 @@ text_paste:
   title: Text Paste
   language: plaintext
   slug: abcd
+
+private_paste:
+  title: Private Paste
+  language: plaintext
+  slug: efgh
+  private: true
+  user: john
