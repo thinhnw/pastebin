@@ -1,1 +1,4 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+text_paste:
+  title: Text Paste
+  language: plaintext
+  slug: abcd

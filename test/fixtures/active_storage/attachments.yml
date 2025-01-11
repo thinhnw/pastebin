@@ -1,0 +1,6 @@
+text_file:
+  name: content_file
+  record: text_paste (Paste)
+  blob: text_file_blob
+
+
