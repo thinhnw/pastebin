@@ -32,6 +32,26 @@ class PastesTest < ApplicationSystemTestCase
     assert_text "Paste was successfully created"
   end
 
+  test "visiting a public paste" do
+    visit paste_url(@public_paste)
+    assert_text "Title:"
+    assert_text @public_paste.title
+    assert_text "Content:"
+  end
+
+  test "visiting a private paste" do
+    login_as @user_john
+    visit paste_url(@private_paste)
+    assert_text "Title:"
+    assert_text @private_paste.title
+    assert_text "Content:"
+  end
+
+  test "anon visiting a private paste" do
+    visit paste_url(@private_paste)
+    assert_equal root_path, current_path
+  end
+
   # test "should update Paste" do
   #   visit paste_url(@paste)
   #   click_on "Edit this paste", match: :first
