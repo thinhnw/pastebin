@@ -7,6 +7,8 @@ services:
     env_file:
       - .env
       - db.env
+    volumes:
+      - active_storage:/usr/src/app/storage     
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pasteit.rule=Host(`pasteit.thinhnw.site`)"  # Replace with your domain
@@ -46,3 +48,4 @@ networks:
 
 volumes:
   postgres_data:
+  active_storage:
