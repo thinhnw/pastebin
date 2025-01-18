@@ -2,7 +2,7 @@
 
 This is a simple Pastebin clone built with Ruby on Rails. Users can create and share text-based pastes with syntax highlighting for various programming languages. 
 
-Check out the [Demo](https://pastebin.thinhnw.site) of the app.
+Check out the [Demo](https://pasteit.thinhnw.site) of the app.
 
 ## Features
 

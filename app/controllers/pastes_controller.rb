@@ -1,23 +1,20 @@
 class PastesController < ApplicationController
-  before_action :set_paste, only: %i[ show edit update destroy ]
+  before_action :set_paste, only: %i[ show raw edit update edit_title update_title destroy ]
+  before_action :authorize_paste, only: %i[ show raw edit update edit_title update_title destroy ]
+  before_action :authenticate_user!, only: %i[ index  ]
 
   # GET /pastes or /pastes.json
   def index
-    @pastes = Paste.all
+    @pastes = current_user.pastes.ordered
   end
 
-  # GET /pastes/1 or /pastes/1.json
   def show
-  end
-
-  def show_by_slug
     @paste = Paste.where(slug: params[:slug]).first
     redirect_to new_paste_path and return if @paste.nil?
     render :show
   end
 
   def raw
-    @paste = Paste.find_by!(slug: params[:slug])
     render plain: @paste.content_file.download
   end
 
@@ -26,43 +23,79 @@ class PastesController < ApplicationController
     @paste = Paste.new
   end
 
-  # GET /pastes/1/edit
+  # POST /pastes or /pastes.json
+  def create
+    if user_signed_in?
+      @paste = current_user.pastes.build(paste_params.except(:content))
+    else
+      @paste = Paste.new(paste_params.except(:content))
+    end
+
+    unless is_content_valid?
+      render :new, status: :unprocessable_entity
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      file_io = StringIO.new(paste_params[:content])
+      @paste.content_file.attach(
+        io: file_io,
+        filename: "#{@paste.slug}.txt",
+        content_type: "text/plain"
+      )
+      if @paste.save
+        redirect_to @paste, notice: "Paste was successfully created."
+      else
+        render :new, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+  def edit_title
+  end
+
+  def update_title
+    if @paste.update(title: paste_params[:title])
+      respond_to do |format|
+        format.turbo_stream
+      end
+    else
+      flash.now[:error] = "Title " + @paste.errors[:title].first
+      @paste.reload
+      respond_to do |format|
+        format.turbo_stream
+      end
+    end
+  end
+
   def edit
   end
 
-  # POST /pastes or /pastes.json
-  def create
-    @paste = Paste.new(paste_params.except(:content))
-    file_io = StringIO.new(paste_params[:content])
-    @paste.content_file.attach(
-      io: file_io,
-      filename: "#{@paste.slug}.txt",
-      content_type: "text/plain"
-    )
-
-    respond_to do |format|
-      if @paste.save
-        format.html { redirect_to paste_slug_path(slug: @paste.slug), notice: "Paste was successfully created." }
-        format.json { render :show, status: :created, location: @paste }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @paste.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /pastes/1 or /pastes/1.json
   def update
-    respond_to do |format|
-      if @paste.update(paste_params)
-        format.html { redirect_to @paste, notice: "Paste was successfully updated." }
-        format.json { render :show, status: :ok, location: @paste }
+    if !is_content_valid?
+      render :edit, status: :unprocessable_entity
+      return
+    end
+    ActiveRecord::Base.transaction do
+      file_io = StringIO.new(paste_params[:content])
+      @paste.content_file.attach(
+        io: file_io,
+        filename: "#{@paste.slug}.txt",
+        content_type: "text/plain"
+      )
+
+      if @paste.update(paste_params.except(:content))
+        redirect_to @paste, notice: "Paste was successfully updated."
+        return
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @paste.errors, status: :unprocessable_entity }
+        raise ActiveRecord::Rollback
       end
     end
+    @paste.reload
+    render :edit, status: :unprocessable_entity
   end
+
 
   # DELETE /pastes/1 or /pastes/1.json
   def destroy
@@ -70,18 +103,37 @@ class PastesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to pastes_path, status: :see_other, notice: "Paste was successfully destroyed." }
-      format.json { head :no_content }
+      format.turbo_stream { flash.now[:notice] = "Paste was successfully destroyed." }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_paste
-      @paste = Paste.find(params.expect(:id))
+      @paste = Paste.find_by(slug: params[:slug])
+      if @paste.nil?
+        redirect_to root_path
+      end
     end
-
     # Only allow a list of trusted parameters through.
     def paste_params
       params.expect(paste: [ :title, :slug, :private, :content, :language ])
+    end
+
+    def authorize_paste
+      if @paste.private? && (!user_signed_in? || @paste.user_id != current_user.id)
+        redirect_to root_path
+      end
+    end
+
+    def is_content_valid?
+      if !paste_params[:content].present?
+        @paste.errors.add(:content, "should not be empty")
+        return false
+      end
+      if paste_params[:content].size >= 1.kilobyte
+        @paste.errors.add(:content, "should be less than 1KB")
+        return false
+      end
+      true
     end
 end

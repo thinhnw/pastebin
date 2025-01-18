@@ -1,7 +1,16 @@
 Rails.application.routes.draw do
-  resources :pastes, only: [ :new, :create, :destroy ]
-  get "p/:slug" => "pastes#show_by_slug", as: :paste_slug
-  get "p/:slug/raw", to: "pastes#raw", as: :raw_paste
+  devise_for :users
+  resources :pastes, param: :slug do
+    collection do
+    end
+    member do
+      get "raw"
+      get "edit_title"
+      patch "update_title"
+    end
+  end
+  # get "p/:slug" => "pastes#show_by_slug", as: :paste_slug
+  # get "p/:slug/raw", to: "pastes#raw", as: :raw_paste
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

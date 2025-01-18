@@ -2,23 +2,50 @@ services:
   app:
     build: .
     restart: always
+    depends_on:
+      - db
     env_file:
       - .env
+      - db.env
+    volumes:
+      - active_storage:/usr/src/app/storage     
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pastebin.rule=Host(`pastebin.thinhnw.site`)"  # Replace with your domain
-      - "traefik.http.routers.pastebin.entrypoints=websecure"
-      - "traefik.http.routers.pastebin.tls=true"
-      - "traefik.http.routers.pastebin.tls.certresolver=myresolver"
-      - "traefik.http.services.pastebin.loadbalancer.server.port=3000"
+      - "traefik.http.routers.pasteit.rule=Host(`pasteit.thinhnw.site`)"  # Replace with your domain
+      - "traefik.http.routers.pasteit.entrypoints=websecure"
+      - "traefik.http.routers.pasteit.tls=true"
+      - "traefik.http.routers.pasteit.tls.certresolver=myresolver"
+      - "traefik.http.services.pasteit.loadbalancer.server.port=3000"
       - "traefik.docker.network=traefik_traefik"
     networks:
       - traefik_traefik
-      - pastebin
+      - pasteit
     # command: bash -c "rm -f tmp/pids/server.pid && bin/dev" #bundle exec rails s -b '0.0.0.0' -p 3000"
+  
+  db:
+    image: postgres:15
+    restart: always
+    env_file:
+      - db.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pasteit
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - pasteit
 
 networks:
   traefik_traefik:
     external: true
-  pastebin:
+  pasteit:
     driver: bridge
+
+volumes:
+  postgres_data:
+  active_storage:

@@ -1,0 +1,11 @@
+<div class="py-12 text-center empty-state">
+  <h2 class="text-2xl font-semibold text-gray-700">No pastes available</h2>
+  <p class="mt-2 text-gray-500">Create your first paste to get started!</p>
+  <div class="mt-6">
+    <%= link_to "New paste", 
+                new_paste_path, 
+                class: "rounded-lg py-3 px-5 bg-gray-800 text-white font-medium",
+                data: { turbo: false }
+                %>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<nav class="flex items-center py-3 text-white bg-gray-800">
+  <div class="container flex items-center justify-between px-5 mx-auto">
+    <div class="flex justify-between w-full mx-auto md:w-2/3">
+      <!-- Logo Section -->
+      <div>
+        <%= link_to root_path, class: "flex items-center space-x-2 text-white hover:text-gray-300" do %>
+          <i class="fa-solid fa-circle-plus"></i>
+          <span class="text-xl font-semibold">Pastebin</span>
+        <% end %>
+      </div>
+      <!-- User Section -->
+      <div class="relative flex items-center space-x-4" data-controller="dropdown">
+        <% if user_signed_in? %>
+          <button 
+            data-action="dropdown#toggle"
+            class="flex items-center px-3 py-2 space-x-2 text-sm font-medium bg-gray-700 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            <span class="text-sm font-medium text-gray-300">
+              <%= current_user.email %>
+            </span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div
+            data-dropdown-target="menu"
+            class="absolute right-0 z-10 hidden w-48 bg-gray-800 rounded-lg shadow-lg top-12"
+          >
+            <div class="py-2">
+              <%= link_to "New Pastes", new_paste_path, class: "block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 rounded-md transition-all duration-200" %>
+              <%= link_to "My Pastes", pastes_path, class: "block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 rounded-md transition-all duration-200" %>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-600 rounded-md transition-all duration-200" %>
+            </div>
+          </div>
+        <% else %>
+          <%= link_to "Sign in", new_user_session_path, class: "px-3 py-1 text-sm font-medium text-gray-300 border border-gray-600 rounded hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

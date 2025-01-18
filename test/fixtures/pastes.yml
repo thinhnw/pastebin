@@ -1,11 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+text_paste:
+  title: Text Paste
+  language: plaintext
+  slug: abcd
 
-one:
-  title: MyString
-  slug: MyString
-  private: false
-
-two:
-  title: MyString
-  slug: MyString
-  private: false
+private_paste:
+  title: Private Paste
+  language: plaintext
+  slug: efgh
+  private: true
+  user: john

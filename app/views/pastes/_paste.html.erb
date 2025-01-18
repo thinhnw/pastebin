@@ -3,10 +3,13 @@
     <strong class="mb-1 font-medium">Title:</strong>
     <%= paste.title %>
   </p>
-  <div class="my-5">
+  <div class="mt-5">
     <strong class="block mb-1 font-medium">Content:</strong>
     <div class="paste-content">
-      <pre data-copy-target="source" class="max-h-[calc(1em*25)] overflow-y-auto"><code class="<%= @paste.language %>"><%= @paste.content_file.download %></code></pre>
+      <p class="hidden" data-copy-target="source"><%= @paste.content_file.download %></p>
+      <pre data-copy-target="source" class="line-numbers">
+        <code class="<%= @paste.language %> max-h-96"><%= @paste.content_file.download %></code>
+      </pre>
     </div>
   </div>
 </div>

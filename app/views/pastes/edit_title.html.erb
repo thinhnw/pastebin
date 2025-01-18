@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "paste_title_#{@paste.id}" do %>
+  <%= form_with(model: @paste, url: update_title_paste_path(@paste), class: "contents") do |form| %>
+    <div class="flex items-center space-x-3">
+      <!-- Title Input -->
+      <%= form.text_field :title, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full h-12" %>
+      <!-- Submit Button with Icon -->
+      <%= button_tag(type: "submit") do %>
+        <i class="text-teal-500 fas fa-check"></i> <!-- Check icon for submit -->
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
