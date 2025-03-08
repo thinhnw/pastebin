@@ -11,15 +11,15 @@ services:
       - active_storage:/usr/src/app/storage     
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pasteit.rule=Host(`pasteit.thinhnw.site`)"  # Replace with your domain
-      - "traefik.http.routers.pasteit.entrypoints=websecure"
-      - "traefik.http.routers.pasteit.tls=true"
-      - "traefik.http.routers.pasteit.tls.certresolver=myresolver"
-      - "traefik.http.services.pasteit.loadbalancer.server.port=3000"
+      - "traefik.http.routers.pastebin.rule=Host(`pastebin.thinhnw.site`)"  # Replace with your domain
+      - "traefik.http.routers.pastebin.entrypoints=websecure"
+      - "traefik.http.routers.pastebin.tls=true"
+      - "traefik.http.routers.pastebin.tls.certresolver=myresolver"
+      - "traefik.http.services.pastebin.loadbalancer.server.port=3000"
       - "traefik.docker.network=traefik_traefik"
     networks:
       - traefik_traefik
-      - pasteit
+      - pastebin
     # command: bash -c "rm -f tmp/pids/server.pid && bin/dev" #bundle exec rails s -b '0.0.0.0' -p 3000"
   
   db:
@@ -30,7 +30,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - pasteit
+      - pastebin
   
   adminer:
     image: adminer
@@ -38,12 +38,12 @@ services:
     ports:
       - 8080:8080
     networks:
-      - pasteit
+      - pastebin
 
 networks:
   traefik_traefik:
     external: true
-  pasteit:
+  pastebin:
     driver: bridge
 
 volumes:
